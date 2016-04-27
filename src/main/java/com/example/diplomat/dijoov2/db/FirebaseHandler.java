@@ -148,20 +148,22 @@ public class FirebaseHandler {
 
     }
 
-    public void getAllChildKeys(final Firebase fb, String node) {
+    public void resetDailyTotal(final Firebase fb, String node) {
 
         final Firebase ref = fb.child(node);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             // Retrieve new posts as they are added to the database
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot checkInSnapshot : snapshot.getChildren()) {
-                    String aKeys = checkInSnapshot.getKey();
+                for (DataSnapshot dijooSnapshot : snapshot.getChildren()) {
+                    String aKeys = dijooSnapshot.getKey();
                     String day = new SimpleDateFormat("MMddyyyy", Locale.getDefault()).format(new Date());
-                    String getDate = checkInSnapshot.getValue(Dijoo.class).getDijooToday();
+                    String getDate = dijooSnapshot.getValue(Dijoo.class).getDijooToday();
 
                     if (!Objects.equals(getDate, day)) {
+                        setDijooTodayDate(ref, aKeys, day);
                         setDailyToZero(ref, aKeys);
+
                     }
                 }
             }
@@ -187,6 +189,15 @@ public class FirebaseHandler {
         ref.updateChildren(today);
 
 
+    }
+
+    public void setDijooTodayDate(Firebase fb, String key, String date){
+
+        Map<String, Object> today = new HashMap<>();
+
+        Firebase ref = fb.child(key);
+        today.put("dijooToday", date);
+        ref.updateChildren(today);
     }
 
     public void deleteDijoo(Firebase allFirebase, final String key) {

@@ -64,7 +64,9 @@ public class HomeActivity extends BaseActivity {
         buildToolBar(toolbar);
         setFirebaseAdapter();
         setOnClickForeRec();
-        fbHandler.getAllChildKeys(dijooFireBase, "allDijoos");
+
+
+        fbHandler.resetDailyTotal(dijooFireBase, "allDijoos");
 
 //        setDailyValuesToZero(dijooFireBase, fbHandler,allKeysForDijoos);
 
